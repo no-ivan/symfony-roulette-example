@@ -1,5 +1,6 @@
 version: "2"
 services:
+
   redis:
     image: redis
     ports:
@@ -18,7 +19,7 @@ services:
       - rabbitmq
       - db
     volumes:
-      - .:/var/www
+      - roulette-sync:/var/www:nocopy
     environment:
       DATABASE_URL: pgsql://user:pass@db/example
       APP_ENV: prod
@@ -31,15 +32,15 @@ services:
   initialize:
     build: .
     command: sh -c "
-             composer install -d /var/www/ &&
-             /var/www/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration &&
-             /var/www/bin/console messenger:setup-transports doctrine"
+      composer install -d /var/www/ &&
+      /var/www/bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration &&
+      /var/www/bin/console messenger:setup-transports doctrine"
     links:
       - redis
       - rabbitmq
       - db
     volumes:
-      - .:/var/www
+      - roulette-sync:/var/www:nocopy
     environment:
       DATABASE_URL: pgsql://user:pass@db/example
       APP_ENV: prod
@@ -56,7 +57,7 @@ services:
       - rabbitmq
       - db
     volumes:
-      - .:/var/www
+      - roulette-sync:/var/www:nocopy
     environment:
       DATABASE_URL: pgsql://user:pass@db/example
       APP_ENV: prod
@@ -70,7 +71,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - .:/var/www
+      - roulette-sync:/var/www:nocopy
     links:
       - app
       - rabbitmq
@@ -81,3 +82,7 @@ services:
       POSTGRES_PASSWORD: pass
       POSTGRES_USER: user
       POSTGRES_DB: example
+
+volumes:
+  roulette-sync:
+    external: true
