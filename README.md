@@ -1,4 +1,4 @@
-## This project shows solution for the next test [Task](TASK.md)
+## This project shows solution for the next test [Task](TASK.md) (In russian language)
 
 ## Usage
 * Install docker
